@@ -19,14 +19,12 @@ public class JpaMain {
 
         /* 정석코드 : 문제가 발생해도 close할 수 있도록 try-catch 사용하기 */
         try {
-            // Member를 저장하기
-            Member member = new Member();
-            member.setId(2L);
-            member.setName("HelloB");
-            // 로직 만들어짐
-
-            em.persist(member); // JPA에 저장
-
+            /* 회원 수정 */
+            // 엔티티 매니저를 마치 자바 컬렉션처럼 내 객체를 대신 저장해주는 것이라 생각하자. 
+            Member findMember = em.find(Member.class, 1L); // 대상 엔티티 클래스, PK
+            System.out.println("findMember.id = "+ findMember.getId());
+            System.out.println("findMember.name = "+ findMember.getName());
+            
             tx.commit(); // 정상적일때 커밋
         } catch (Exception e) {
             tx.rollback(); // 문제가 생기면 롤백을 한다.
