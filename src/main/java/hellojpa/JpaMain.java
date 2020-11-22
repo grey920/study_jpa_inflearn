@@ -18,17 +18,18 @@ public class JpaMain {
         tx.begin(); 
 
         try {
-            // JPAL은 객체지향 쿼리 : Member 객체를 대상으로 쿼리를 짠다. (대상이 테이블이 아닌 객체이다.)
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
-          
-            for(Member member : result) {
-                System.out.println("member.name = "+ member.getName());
-            }
+            // 비영속 - JPA와 관련없는 상태. DB에도 안들어감
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
             
-            tx.commit();
+            // 영속 상태 -엔티티 매니저 안에 있는 영속성 컨텍스트에 의해 member가 관리됨. DB에 저장x
+            System.out.println("=== BRFORE ===");
+            em.persist(member);
+            em.detach(member); // 영속성 컨텍스트에서 다시 지운다.(관계가 없어짐)
+            System.out.println("=== AFTER ===");
+            
+            tx.commit(); // 커밋하는 시점에 DB에 쿼리가 날라간다. 
         } catch (Exception e) {
             tx.rollback(); 
         } finally {
