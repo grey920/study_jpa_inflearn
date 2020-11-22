@@ -13,7 +13,17 @@ public class Member {
     private Long id;
     private String name;
     
-    public Long getId() {
+    // JPA는 내부적으로 리플렉션을 쓰기 때문에 동적으로 객체를 생성해야 한다. 따라서 기본 생성자가 하나 있어야 함. 
+    public Member() {
+    	
+    }
+    
+    public Member(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	public Long getId() {
         return id;
     }
     public void setId(Long id) {
