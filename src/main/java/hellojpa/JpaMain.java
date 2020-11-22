@@ -18,18 +18,23 @@ public class JpaMain {
         tx.begin(); 
 
         try {
-            // 비영속 - JPA와 관련없는 상태. DB에도 안들어감
+        	// 준영속
             Member member = new Member();
-            member.setId(100L);
+            member.setId(101L);
             member.setName("HelloJPA");
             
-            // 영속 상태 -엔티티 매니저 안에 있는 영속성 컨텍스트에 의해 member가 관리됨. DB에 저장x
+            // 영속
             System.out.println("=== BRFORE ===");
             em.persist(member);
-            em.detach(member); // 영속성 컨텍스트에서 다시 지운다.(관계가 없어짐)
             System.out.println("=== AFTER ===");
             
-            tx.commit(); // 커밋하는 시점에 DB에 쿼리가 날라간다. 
+            // 조회하기 - 조회용 sql이 나가는지가 중요하다 -> 안나감!! 왜?? 
+            // -> em.persist(member)에서 1차 캐시에 저장되고, 똑같은 PK로 조회하기 때문에 1차 캐시에서 바로 조회한 것!
+            Member findMember = em.find(Member.class, 101L);
+            
+            System.out.println("findMember = " + findMember.getId());
+            System.out.println("findMember = " + findMember.getName());
+            tx.commit(); 
         } catch (Exception e) {
             tx.rollback(); 
         } finally {
