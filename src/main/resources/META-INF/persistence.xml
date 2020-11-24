@@ -21,7 +21,7 @@
 			<property name="hibernate.use_sql_comments" value="true" />
 			<!-- 이 사이즈만큼 모아서 데이터베이스에 한방에 네트워크로 보내고 커밋을 친다.  -->
 			<property name="hibernate.jdbc.batch_size" value="10" />
-			<!--<property name="hibernate.hbm2ddl.auto" value="create" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="validate" />
 		</properties>
 	</persistence-unit>
 </persistence>
