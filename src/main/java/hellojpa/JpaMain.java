@@ -22,6 +22,7 @@ public class JpaMain {
 			Team team = new Team();
 			team.setName("TeamA");
 			em.persist(team);
+		
 			
 			Member member = new Member();
 			member.setUsername("member1");
@@ -35,6 +36,7 @@ public class JpaMain {
 		
 			// 조회
 			Member findMember = em.find(Member.class, member.getId());
+			System.out.println(member.getId());
 			
 			//찾아온 멤버의 소속을 알고싶을 때 - 팀을 바로 끄집어내서 쓸 수 있다.
 			Team findTeam = findMember.getTeam();
@@ -43,8 +45,8 @@ public class JpaMain {
 			// 수정
 			// 100번 팀이 있다는 가정하에 가져와서 -> member의 팀을 setTeam으로 바꾸면
 			// DB의 외래키값이 업데이트 된다.
-			Team newTeam = em.find(Team.class, 100L);
-			findMember.setTeam(newTeam);
+//			Team newTeam = em.find(Team.class, 100L);
+//			findMember.setTeam(newTeam);
 			
 			tx.commit();
 		} catch (Exception e) {
