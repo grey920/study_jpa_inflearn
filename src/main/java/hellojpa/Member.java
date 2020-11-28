@@ -27,8 +27,8 @@ public class Member {
 //    @Column(name="TEAM_ID") //디비 테이블에 맞춘 설계
 //    private Long teamId;
     
-    /* 관계가 뭔지와 이 관계를 할 때 조인하는 컬럼이 뭔지만 알려주면 단방향 연관관계는 끝*/
-    @ManyToOne // 멤버입장에서는 Many 
+    /* 진짜 매핑 - 연관관계의 주인 (외래 키가 있는 곳을 주인으로 정한다) */
+    @ManyToOne 
     @JoinColumn(name = "TEAM_ID") // join해야 하는 컬럼이 뭔지 - erd에서 FK로 조인된 부분
     private Team team;
 
@@ -55,6 +55,19 @@ public class Member {
 	public void setTeam(Team team) {
 		this.team = team;
 	}
+
+	@Override
+	public String toString() {
+		return "Member [id=" + id + ", username=" + username + ", team=" + team + "]";
+	}
+
+	// 관례적인 getter/setter가 아닌 중요한 일이란 느낌이 들게 메소드 명을 setOOO가 아닌 다른 이름으로 짓는다.
+//	public void changeTeam(Team team) {
+//		this.team = team;
+//		// 연관관계 편의 메소드 - 양쪽에 값 셋팅
+//		team.getMembers().add(this);
+//		// 여기서 기존에 있던걸 뺀다거나 null 체크도 해줄 수 있음.
+//	}
     
     
 
