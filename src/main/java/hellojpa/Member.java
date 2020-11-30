@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ManyToAny;
@@ -22,6 +23,10 @@ public class Member {
     
     @Column(name ="USERNAME") 
     private String username; 
+    
+    @OneToOne //@ManyToOne과 유사
+    @JoinColumn(name="LOCKER_ID")
+    private Locker locker;
  
 
 	public Long getId() {

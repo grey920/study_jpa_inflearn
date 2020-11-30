@@ -1,7 +1,5 @@
 package hellojpa;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -26,6 +24,7 @@ public class JpaMain {
 			Team team = new Team();
 			team.setName("teamA");
 			// 애매ㅐ~~ Team 테이블이 아니라 Member테이블에 있는 외래키를 업데이트 시켜야 해..
+			// 업데이트 쿼리가 한 번 더 나간다.
 			team.getMembers().add(member);
 			
 			em.persist(team);
