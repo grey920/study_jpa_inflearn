@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass //매핑 정보만 받는 부모클래스(슈퍼클래스)
-public class BaseEntity {
+public abstract class BaseEntity {
 
 	 // 모든 테이블에 반복 
 	@Column(name="INSERT_MEMBER")
