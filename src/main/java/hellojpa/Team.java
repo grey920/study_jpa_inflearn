@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 /* 양방향 연관관계 */
 @Entity
-public class Team {
+public class Team extends BaseEntity {
 	
 	@Id
 	@GeneratedValue

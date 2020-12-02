@@ -1,5 +1,7 @@
 package hellojpa;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.ManyToAny;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
     
   
     @Id
@@ -28,7 +30,7 @@ public class Member {
     @JoinColumn(name="LOCKER_ID")
     private Locker locker;
  
-
+   
 	public Long getId() {
 		return id;
 	}
