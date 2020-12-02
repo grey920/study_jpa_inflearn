@@ -16,18 +16,20 @@ public class JpaMain {
 		tx.begin();
 
 		try {
-			Member member = new Member();
-			member.setUsername("member1");
+		
+			Movie movie = new Movie();
+			movie.setDirector("aaaa");
+			movie.setActor("bbbb");
+			movie.setName("러브레터");
+			movie.setPrice(10000);
+
+			em.persist(movie);
 			
-			em.persist(member);
-			
-			Team team = new Team();
-			team.setName("teamA");
-			// 애매ㅐ~~ Team 테이블이 아니라 Member테이블에 있는 외래키를 업데이트 시켜야 해..
-			// 업데이트 쿼리가 한 번 더 나간다.
-			team.getMembers().add(member);
-			
-			em.persist(team);
+			em.flush();
+			em.clear();
+
+			Movie findMovie = em.find(Movie.class, movie.getId());
+			System.out.println("findMovie = "+ findMovie);
 			
 			tx.commit();
 		} catch (Exception e) {
