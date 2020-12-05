@@ -21,19 +21,19 @@ public class JpaMain {
 			member1.setUsername("member1");
 			em.persist(member1);
 
-			Member member2 = new Member();
-			member2.setUsername("member2");
-			em.persist(member2);
-
+		
 			em.flush();
 			em.clear();
 
+			Member reference = em.getReference(Member.class, member1.getId());
 			Member m1 = em.find(Member.class, member1.getId());
-			// Member m2 = em.find(Member.class, member2.getId());
-			Member m2 = em.getReference(Member.class, member2.getId());
-
-			logic(m1, m2);
-
+			System.out.println("m1 = " + m1.getClass()); //m1 = class hellojpa.Member 즉, 프록시가 아닌 진짜 객체가 출력
+			
+			System.out.println("reference = " + reference.getClass()); // reference도 프록시가 아닌 Member이다.
+																	// 1. 영속성컨텍스트에 이미 있으니까 (성능상)
+																	// 2. 한 트랜잭션 안에서 같은 값을 보장한다. (==비교를 true로 만들기 위해)
+			System.out.println("a == a: " + (m1 == reference)); // 한 영속성 컨텍스트에서 같은 pk값으로 가져왔다면 항상 true를 반환한다
+			
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
@@ -43,12 +43,5 @@ public class JpaMain {
 		emf.close();
 	}
 
-	private static void logic(Member m1, Member m2) {
-		// 타입 체크 - 정확. 상속관계여도 false
-		//System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass())); false
-		System.out.println("m1 == m2: " + (m1 instanceof Member)); // true
-		System.out.println("m1 == m2: " + (m2 instanceof Member)); // true
-
-	}
 
 }
