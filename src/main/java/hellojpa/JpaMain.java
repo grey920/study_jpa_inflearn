@@ -44,10 +44,13 @@ public class JpaMain {
 
 //			Member m = em.find(Member.class, member1.getId()); 
 			
-			List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
+			List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList(); // 값이 다 채워져서 조인으로 나온다
 		
 			// SQL : select * from Member
 			// SQL : select * from Team where TEAM_ID = xxx
+			
+			/*LAZY 로딩으로 바꾸면 Team에 대한 쿼리는 없이 select m from Member m 쿼리 하나만 나간다.
+			 * => Team을 안쓰니까! Team은 프록시로 박혀있으니까 안나온다.*/
 			
 			tx.commit();
 		} catch (Exception e) {
