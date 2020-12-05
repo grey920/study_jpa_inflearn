@@ -25,14 +25,15 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 
-			Member reference = em.getReference(Member.class, member1.getId());
-			Member m1 = em.find(Member.class, member1.getId());
-			System.out.println("m1 = " + m1.getClass()); //m1 = class hellojpa.Member 즉, 프록시가 아닌 진짜 객체가 출력
+			Member refMember = em.getReference(Member.class, member1.getId());
+			System.out.println("refMember = " + refMember.getClass()); // class hellojpa.Member$HibernateProxy$NwKcwPip
 			
-			System.out.println("reference = " + reference.getClass()); // reference도 프록시가 아닌 Member이다.
-																	// 1. 영속성컨텍스트에 이미 있으니까 (성능상)
-																	// 2. 한 트랜잭션 안에서 같은 값을 보장한다. (==비교를 true로 만들기 위해)
-			System.out.println("a == a: " + (m1 == reference)); // 한 영속성 컨텍스트에서 같은 pk값으로 가져왔다면 항상 true를 반환한다
+			Member findMember = em.find(Member.class, member1.getId()); // 프록시로 한 번 조회가 되면 em.find()로 불러와도 프록시 객체가 나온다. (==비교 보장을 위해)
+			System.out.println("findMember = " +  findMember.getClass()); // class hellojpa.Member$HibernateProxy$NwKcwPip
+			
+			/* 프록시든 아니든 개발에 크게 문제가 없게 개발하는 것이 중요. (refMember ==  findMember)를 맞춘다!! */
+																	
+			System.out.println("a == a: " + (refMember ==  findMember)); // true (==비교가 무조건 보장된다)
 			
 			tx.commit();
 		} catch (Exception e) {
