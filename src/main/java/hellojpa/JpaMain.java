@@ -1,5 +1,7 @@
 package hellojpa;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -21,25 +23,31 @@ public class JpaMain {
 			Team team = new Team();
 			team.setName("teamA");
 			em.persist(team);
+			
+			Team teamB = new Team();
+			teamB.setName("teamB");
+			em.persist(teamB);
 
 			Member member1 = new Member();
 			member1.setUsername("member1");
 			member1.setTeam(team);
 			em.persist(member1);
+			
+			Member member2 = new Member();
+			member2.setUsername("member2");
+			member2.setTeam(teamB);
+			em.persist(member2);
 
 		
 			em.flush();
 			em.clear();
 
-			/*애플리케이션 개발시 대부분 Member를 쓸때 Team을 같이 사용한다면 즉시로딩*/
-			Member m = em.find(Member.class, member1.getId()); // 이 시점에서 Member와 Team을 조인해서 한 방에 조회
+//			Member m = em.find(Member.class, member1.getId()); 
 			
-			System.out.println("m = " + m.getTeam().getClass()); // class hellojpa.Team <- 프록시가 아닌 진짜 객체 (즉시로딩이기 때문에 프록시가 필요없다.)
-			
-			System.out.println("============");
-			m.getTeam().getName(); // 프록시가 아니라 진짜 객체가 나온거기 때문에 초기화가 여기 필요 없다. (쿼리X)
-			System.out.println("teamName = " + m.getTeam().getName()); // 바로 teamA가 출력됨
-			System.out.println("============");
+			List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
+		
+			// SQL : select * from Member
+			// SQL : select * from Team where TEAM_ID = xxx
 			
 			tx.commit();
 		} catch (Exception e) {
