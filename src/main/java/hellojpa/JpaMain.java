@@ -5,6 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.hibernate.Hibernate;
+
 public class JpaMain {
 
 	public static void main(String[] args) {
@@ -26,17 +28,15 @@ public class JpaMain {
 			em.clear();
 
 			Member refMember = em.getReference(Member.class, member1.getId());
+			/*프록시 클래스 확인 방법*/
 			System.out.println("refMember = "+ refMember.getClass()); // Proxy
 			
-			//em.detach(refMember); // 영속성컨텍스트에서 관리 안함
-			//em.close();
-			em.clear(); // 끊긴건 아니지만 영속성 컨텍스트가 깨끗해짐
+			/*프록시 강제 초기화*/
+			Hibernate.initialize(refMember); //(하이버네이트가 제공하는) 강제초기화
+			//refMember.getUsername();// 강제 초기화 (강제 호출: JPA 표준은 강제초기화가 없음)
 			
-			refMember.getUsername(); // 초기화 - 쿼리나가야 함
-			/* could not initialize proxy [hellojpa.Member#1] - no Session 
-			 * org.hibernate.LazyInitializationException:
-			 * 보통 트랜잭션 끝나고 나서 프록시를 조회할 때 이런 에러를 많이 만난다.
-			 */
+			/*프록시 인스턴스의 초기화 여부 확인*/
+			System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // 초기화가 안되었으면 false, 되어있으면 true
 			
 			tx.commit();
 		} catch (Exception e) {
