@@ -26,18 +26,22 @@ public class JpaMain {
 			em.clear();
 
 			Member refMember = em.getReference(Member.class, member1.getId());
-			System.out.println("refMember = " + refMember.getClass()); // class hellojpa.Member$HibernateProxy$NwKcwPip
+			System.out.println("refMember = "+ refMember.getClass()); // Proxy
 			
-			Member findMember = em.find(Member.class, member1.getId()); // 프록시로 한 번 조회가 되면 em.find()로 불러와도 프록시 객체가 나온다. (==비교 보장을 위해)
-			System.out.println("findMember = " +  findMember.getClass()); // class hellojpa.Member$HibernateProxy$NwKcwPip
+			//em.detach(refMember); // 영속성컨텍스트에서 관리 안함
+			//em.close();
+			em.clear(); // 끊긴건 아니지만 영속성 컨텍스트가 깨끗해짐
 			
-			/* 프록시든 아니든 개발에 크게 문제가 없게 개발하는 것이 중요. (refMember ==  findMember)를 맞춘다!! */
-																	
-			System.out.println("a == a: " + (refMember ==  findMember)); // true (==비교가 무조건 보장된다)
+			refMember.getUsername(); // 초기화 - 쿼리나가야 함
+			/* could not initialize proxy [hellojpa.Member#1] - no Session 
+			 * org.hibernate.LazyInitializationException:
+			 * 보통 트랜잭션 끝나고 나서 프록시를 조회할 때 이런 에러를 많이 만난다.
+			 */
 			
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
+			e.printStackTrace();
 		} finally {
 			em.close();
 		}
