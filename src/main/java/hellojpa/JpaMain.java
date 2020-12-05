@@ -31,12 +31,14 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 
-			Member m = em.find(Member.class, member1.getId()); // Member만 먼저 조회
+			/*애플리케이션 개발시 대부분 Member를 쓸때 Team을 같이 사용한다면 즉시로딩*/
+			Member m = em.find(Member.class, member1.getId()); // 이 시점에서 Member와 Team을 조인해서 한 방에 조회
 			
-			System.out.println("m = " + m.getTeam().getClass()); // class hellojpa.Team$HibernateProxy$1ATEZBtf <- 프록시 객체가 리턴
+			System.out.println("m = " + m.getTeam().getClass()); // class hellojpa.Team <- 프록시가 아닌 진짜 객체 (즉시로딩이기 때문에 프록시가 필요없다.)
 			
 			System.out.println("============");
-			m.getTeam().getName(); //실제 Team의 어떤 속성을 사용하면 그때  프록시 객체가 초기화되면서 쿼리가 나가고 값이 셋팅된다.
+			m.getTeam().getName(); // 프록시가 아니라 진짜 객체가 나온거기 때문에 초기화가 여기 필요 없다. (쿼리X)
+			System.out.println("teamName = " + m.getTeam().getName()); // 바로 teamA가 출력됨
 			System.out.println("============");
 			
 			tx.commit();
