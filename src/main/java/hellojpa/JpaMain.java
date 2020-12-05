@@ -16,21 +16,24 @@ public class JpaMain {
 		tx.begin();
 
 		try {
-			
-			Member member = new Member();
-			member.setUsername("hello");
-			
-			em.persist(member);
-			
+
+			Member member1 = new Member();
+			member1.setUsername("member1");
+			em.persist(member1);
+
+			Member member2 = new Member();
+			member2.setUsername("member2");
+			em.persist(member2);
+
 			em.flush();
 			em.clear();
-			// 영속성 컨텍스트가 깔끔하게 초기화됨
-			
-//			Member findMember = em.find(Member.class, member.getId());
-			Member findMember = em.getReference(Member.class, member.getId());  
-			System.out.println("findmember.username = " + findMember.getUsername()); //내부적으로 영속성 컨텍스트에 요청해 (초기화 요청) 실제 값을 가져오게 됨
-			System.out.println("findmember.username = " + findMember.getUsername()); // 두번째부터는 초기화를 통해 target에 값이 있으므로 바로 값을 출력
-//			
+
+			Member m1 = em.find(Member.class, member1.getId());
+			// Member m2 = em.find(Member.class, member2.getId());
+			Member m2 = em.getReference(Member.class, member2.getId());
+
+			logic(m1, m2);
+
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
@@ -40,6 +43,12 @@ public class JpaMain {
 		emf.close();
 	}
 
-	
+	private static void logic(Member m1, Member m2) {
+		// 타입 체크 - 정확. 상속관계여도 false
+		//System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass())); false
+		System.out.println("m1 == m2: " + (m1 instanceof Member)); // true
+		System.out.println("m1 == m2: " + (m2 instanceof Member)); // true
+
+	}
 
 }
