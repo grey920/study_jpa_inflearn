@@ -18,25 +18,26 @@ public class JpaMain {
 		tx.begin();
 
 		try {
+			Team team = new Team();
+			team.setName("teamA");
+			em.persist(team);
 
 			Member member1 = new Member();
 			member1.setUsername("member1");
+			member1.setTeam(team);
 			em.persist(member1);
 
 		
 			em.flush();
 			em.clear();
 
-			Member refMember = em.getReference(Member.class, member1.getId());
-			/*프록시 클래스 확인 방법*/
-			System.out.println("refMember = "+ refMember.getClass()); // Proxy
+			Member m = em.find(Member.class, member1.getId()); // Member만 먼저 조회
 			
-			/*프록시 강제 초기화*/
-			Hibernate.initialize(refMember); //(하이버네이트가 제공하는) 강제초기화
-			//refMember.getUsername();// 강제 초기화 (강제 호출: JPA 표준은 강제초기화가 없음)
+			System.out.println("m = " + m.getTeam().getClass()); // class hellojpa.Team$HibernateProxy$1ATEZBtf <- 프록시 객체가 리턴
 			
-			/*프록시 인스턴스의 초기화 여부 확인*/
-			System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember)); // 초기화가 안되었으면 false, 되어있으면 true
+			System.out.println("============");
+			m.getTeam().getName(); //실제 Team의 어떤 속성을 사용하면 그때  프록시 객체가 초기화되면서 쿼리가 나가고 값이 셋팅된다.
+			System.out.println("============");
 			
 			tx.commit();
 		} catch (Exception e) {
